@@ -1,7 +1,6 @@
-Fork for your Telegram Blog
+The Lift Blog
 =============
 
+This is the contents of the Lift blog
+which is published at http://lift.la
 
-This is a template that you can fork into your own GitHub account
-and then point [Telegram](https://telegr.am) at your
-repository to your GitHub repo so you can publish your blog.
