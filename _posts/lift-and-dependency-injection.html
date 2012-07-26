@@ -1,0 +1,40 @@
+title: Lift and Dependency Injection
+date: 2010/11/07 10:41:16 -0800
+tags: []
+author: David Pollak
+alias: /lift-and-dependency-injection
+
+<h1>Lift and Dependency Injection</h1> <p>Dependency injection is an important topic in the Java world.  It&#39;s important because Java lacks certain basic features (e.g., functions) that tend to bind abstract interfaces to concrete implementations.  Basically, it&#39;s so much easier to do <code>MyInterface thing = new MyInterfaceImpl()</code>, so most developers do just that.<br /> </p> <p>Scala&#39;s <a href="http://scala.sygneca.com/patterns/component-mixins">cake pattern</a> goes a long way to help developers compose complex behaviors by combining Scala traits.  Jonas Bonér wrote an excellent piece on <a href="http://jonasboner.com/2008/10/06/real-world-scala-dependency-injection-di.html">Dependency Injection</a>.<br /> </p> <p>The cake pattern only goes half way to giving a Java developer complete dependency injection functionality.  The cake pattern allows you to compose the complex classes out of Scala traits, but the cake pattern is less helpful in terms of allowing you to make dynamic choices about which combination of cake to vend in a given situation.  Lift provides a extra features that complete the dependency injection puzzle.<br /> </p> <h2>Lift Libraries and <code>Injector</code></h2> <p>Lift is both a web framework and a set of Scala libraries.  Lift&#39;s <code>common</code>, <code>actor</code>, <code>json</code>, and <code>util</code> packages provide common libraries for Scala developers to build their application.  Lift&#39;s libraries are well tested, widely used, well supported, and released on a well defined schedule (montly milestones, quarterly releases).<br /> </p> <p>Lift&#39;s Injector trait forms the basis of dependency injection:<br /> </p> <div class="CodeRay">
+  <div class="code"><pre>/** * A trait that does basic dependency injection. */trait Injector {  implicit def inject[T](implicit man: Manifest[T]): Box[T]}</pre></div>
+</div>
+ <p>You can use this trait as follows:<br /> </p> <div class="CodeRay">
+  <div class="code"><pre>object MyInjector extends Injector {...}val myThing: Box[Thing] = MyInjector.inject</pre></div>
+</div>
+ <p>The reason that the instance of <code>MyThing</code> is in a <code><a href="http://lift.la/scala-option-lift-box-and-how-to-make-your-co">Box</a></code> is because we&#39;re not guaranteed that <code>MyInjector</code> knows how to create an instance of <code>Thing</code>.<br /> </p> <p>Lift provides an implementation of <code>Injector</code> called <code>SimpleInjector</code> that allows you to register (and re-register) functions for injection:</p> <div class="CodeRay">
+  <div class="code"><pre>object MyInjector extends SimpleInjectordef buildOne(): Thing = if (testMode) new Thing with TestThingy {} else new Thing with RuntimeThingy {}MyInjector.registerInjection(buildOne _) // register the function that builds Thing val myThing: Box[Thing] = MyInjector.inject</pre></div>
+</div>
+ <p>This isn&#39;t bad... it allows us to define a function that makes the injection-time decision, and we can change the function out during runtime (or test-time.)  However, there are two problems: getting <code>Box</code>es for each injection is less than optimal.  Further, globally scoped functions mean you have to put a whole bunch of logic (test vs. production vs. xxx) into the function.  SimpleInjector has lots of ways to help out.</p> <div class="CodeRay">
+  <div class="code"><pre>object MyInjector extends SimpleInjector { val thing = new Inject(buildOne _) {} // define a thing, has to be a val so it's eagerly evaluated and registered}def buildOne(): Thing = if (testMode) new Thing with TestThingy {} else new Thing with RuntimeThingy {} val myThingBox: Box[Thing] = MyInjector.injectval myThing = MyInjector.thing.vend // vend an instance of Thing</pre></div>
+</div>
+ <p><code>Inject</code> has a futher trick up its sleave... with <code>Inject</code>, you can scope the function... this is helpful for testing and if you need to change behavior for a particular call scope:</p> <div class="CodeRay">
+  <div class="code"><pre>MyInjector.thing.doWith(new Thing with SpecialThing {}) { val t = MyInjector.thing.vend // an instance of SpecialThing val bt: Box[Thing] = MyInjector.inject // Full(SpecialThing) }MyInjector.thing.default.set(() =&gt; new Thing with YetAnotherThing {}) // set the global scope</pre></div>
+</div>
+ <p>Within the scope of the doWith call, <code>MyInjector.thing</code> will vend instances of <code>SpecialThing</code>.  This is useful for testing as well as changing behavior within the scope of the call or globally.  This gives us much of the functionality we get with dependency injection packages for Java.  But within Lift WebKit, it gets better.</p> <h2>Lift WebKit and enhanced injection scoping</h2> <p>Lift&#39;s WebKit offers broad ranging tools for handling HTTP requests as well as HTML manipulation.</p> <p>Lift WebKit&#39;s <code>Factory</code> extends <code>SimpleInjector</code>, but adds the ability to scope the function based on current HTTP request or the current container session:</p> <div style="margin-left: 40px;"> <div class="CodeRay">
+  <div class="code"><pre>object MyInjector extends Factory { val thing = new FactoryMaker(buildOne _) {} // define a thing, has to be a val so it's eagerly evaluated and registered}</pre></div>
+</div>
+ <div class="CodeRay">
+  <div class="code"><pre>MyInjector.thing.session.set(new Thing with ThingForSession {}) // set the instance that will be vended for the duration of the session</pre></div>
+</div>
+ <div class="CodeRay">
+  <div class="code"><pre>MyInjector.thing.request.set(new Thing with ThingForRequest {}) // set the instance that will be vended for the duration of the request</pre></div>
+</div>
+ </div> <p>WebKit&#39;s <code>LiftRules</code> is a <code>Factory</code> and many of the properties that <code>LiftRules</code> contains are <code>FactoryMakers</code>.  This means that you can change behavior during call scope (useful for testing):</p> <div class="CodeRay">
+  <div class="code"><pre>LiftRules.convertToEntity.doWith(true) { ... test that we convert certain characters to entities}</pre></div>
+</div>
+ <p> Or based on the current request (for example you can change the rules for calculating the docType during the current request):</p> <div class="CodeRay">
+  <div class="code"><pre>if (isMobileReqest) LiftRules.docType.request.set((r: Req) =&gt; Full(DocType.xhtmlMobile))</pre></div>
+</div>
+ <p>Or based on the current session (for example, changing maxConcurrentRequests based on some rules when a session is created):<br /> </p> <div class="CodeRay">
+  <div class="code"><pre>if (browserIsSomethingElse) LiftRules.maxConcurrentRequests.session.set((r: Req) =&gt; 32) // for this session, we allow 32 concurrent requests</pre></div>
+</div>
+ <h2>Conclusion</h2> <p>Lift&#39;s <code>SimpleInjector</code>/<code>Factory</code> facilities provide a powerful and flexible mechanism for vending instances based on a global function, call stack scoping, request and session scoping and provides more flexible features than most Java-based dependency injection frameworks without resorting to XML for configuration or byte-code rewriting magic.</p>

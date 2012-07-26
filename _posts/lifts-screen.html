@@ -1,0 +1,666 @@
+title: Lift's Screen
+date: 2010/06/05 21:18:00 -0700
+tags: []
+author: David Pollak
+alias: /lifts-screen
+
+<div>
+<h2><big><span style="font-size: large;"><span><big><strong>Background</strong></big></span></span></big></h2>
+</div>
+<p />
+<p><span>Much of the web is creating input forms for users to submit, validating those input forms and if the forms pass validation, an action is performed.  If the forms don't pass validation, the user is told which fields caused the validation problems and is given an opportunity to fix the problems.  Lift provides a single-screen input/validation mechanism called LiftScreen and a multi-page input/validation mechanism (with stateful next/previous buttons) called Wizard.  This post will discuss LiftScreen and the next post will discuss Wizard. </span></p>
+<p />
+<div><span>Both Wizard and Screen share the following attributes:</span></div>
+<div>
+<ul>
+</ul><span>
+<li>All logic can be tested without involving HTTP</li>
+<li>All logic is declarative</li>
+<li>All state is managed by Lift</li>
+<li>The back-button works as the user would expect it to work</li>
+<li>The form elements are strongly typed</li>
+<li>The rendering logic and templates is divorced from the form logic</li>
+</span> 
+
+<div>
+<h2><span style="font-size: large;"><span><strong>Basics</strong></span></span></h2>
+</div>
+<p />
+<div><span>First, let's declare a very simple input screen that asks your favorite ice cream flavor:</span></div>
+</div>
+<p />
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div>
+<div><span><span style="font-family: courier new, monospace;">object AskAboutIceCream1 extends LiftScreen {</span></span></div>
+</div>
+<div>
+<div><span><span style="font-family: courier new, monospace;">  val flavor = field(S ? "What's your favorite Ice cream flavor", "")</span></span></div>
+</div>
+<p />
+<div>
+<div><span><span>  def finish() {</span></span></div>
+</div>
+<div>
+<div><span><span style="font-family: courier new, monospace;">    S.notice("I like "+<a href="http://flavor.is" target="_blank">flavor.is</a>+" too!")</span></span></div>
+</div>
+<div>
+<div><span><span style="font-family: courier new, monospace;">  }</span></span></div>
+</div>
+<div>
+<div><span><span style="font-family: courier new, monospace;">}</span></span></div>
+</div>
+</blockquote>
+<p />
+<div><span>We create an <span style="font-family: courier new, monospace;">object</span>, a Scala singleton, called <span style="font-family: courier new, monospace;">AskAboutIceCream1</span> which extends <span style="font-family: courier new, monospace;">LiftScreen</span>.  We declare a single field called <span style="font-family: courier new, monospace;">flavor</span>.  In our view, we refer to the LiftScreen with the following code:</span></div>
+<p />
+<div><span>&lt;lift:AskAboutIceCream1/&gt;</span></div>
+<p />
+<div><span>And we get a display:</span></div>
+<p />
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"> 
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><label style="border-width: 0px; margin: 0px; padding: 0px; font-weight: bold; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">What's your favorite Ice cream flavor</label></blockquote>
+</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><input name="F1098202537711ID4" type="text" /></blockquote>
+</td>
+</tr>
+
+</table>
+</form></div>
+</div>
+<div><span style="line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;"> </td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">Cancel</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+Finish<p /> 
+</td>
+</tr>
+
+</table>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"></form></div>
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><span>When we submit the form, a notice is displayed agreeing with our ice cream choice.  But, we can enter a blank ice cream name and it will still be accepted.  That's not optimal.  We need to add some validation:</span></div>
+<p />
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">object AskAboutIceCream2 extends LiftScreen {</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  val flavor = field(S ? "What's your favorite Ice cream flavor", "",</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     trim, </span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     valMinLen(2, "Name too short"),</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     valMaxLen(40, "That's a long name"))</span></span></div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  def finish() {</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    S.notice("I like "+<a href="http://flavor.is" target="_blank">flavor.is</a>+" too!")</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  }</span></span></div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">}</span></span></div>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>This code trims the incoming string (removes any leading and trailing spaces) and then makes sure the length is reasonable.  So, if we enter a blank value, we get:</span></div>
+<p />
+</div>
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"> 
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><label style="border-width: 0px; margin: 0px; padding: 0px; font-weight: bold; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline; color: red;">What's your favorite Ice cream flavor</label></blockquote>
+<ul style="border-width: 0px; margin: 0px 1.5em 1.5em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<li> 
+<ul>
+<li style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline; color: red;">Name too short</li>
+</ul>
+</li>
+</ul>
+</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><input name="F1098202537790NMA" type="text" /></blockquote>
+</td>
+</tr>
+
+</table>
+</form></div>
+</div>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"></form></div>
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;"> </td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">Cancel</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">Finish</td>
+</tr>
+
+</table>
+<span><br /> </span>
+</div>
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><span>We can add another field, this time a Boolean which turns into a checkbox:</span></div>
+<p />
+</div>
+</div>
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">object AskAboutIceCream3 extends LiftScreen {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  val flavor = field(S ? "What's your favorite Ice cream flavor", "",</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     trim, valMinLen(2,S ? "Name too short"),</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     valMaxLen(40,S ? "That's a long name"))</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  val sauce = field(S ? "Like chocalate sauce?", false)</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  def finish() {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    if (sauce) {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">      S.notice(<a href="http://flavor.is" target="_blank">flavor.is</a>+" tastes especially good with chocolate sauce!")</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    }</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    else S.notice("I like "+<a href="http://flavor.is" target="_blank">flavor.is</a>+" too!")</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  }</span></span></div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">}</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>And our display looks like:</span></div>
+<p />
+</div>
+</div>
+</div>
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"> 
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><label style="border-width: 0px; margin: 0px; padding: 0px; font-weight: bold; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">What's your favorite Ice cream flavor</label></blockquote>
+</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><input name="F612841935807FVR" type="text" /></blockquote>
+</td>
+</tr>
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><label style="border-width: 0px; margin: 0px; padding: 0px; font-weight: bold; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">Like chocalate sauce?</label></blockquote>
+</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;"><input name="F612841935808HDD" type="checkbox" value="true" /></blockquote>
+</td>
+</tr>
+
+</table>
+</form></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"><form method="post" style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;"></form></div>
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<table style="border-width: 0px; margin: 0px 0px 1.4em; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; border-collapse: separate;">
+
+<tr style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;"> </td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">Cancel</td>
+<td style="border-width: 0px; margin: 0px; padding: 4px 10px 4px 5px; font-weight: normal; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: middle; text-align: left;">Finish</td>
+</tr>
+
+</table>
+</div>
+</div>
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>The Boolean sauce field defaults to creating a checkbox rather than an text field.</span></div>
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>We can also do cross-field validation:</span></div>
+<p />
+</div>
+</div>
+</div>
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">object AskAboutIceCream4 extends LiftScreen {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  val flavor = field(S ? "What's your favorite Ice cream flavor", "",</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     trim, valMinLen(2,S ? "Name too short"),</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">                     valMaxLen(40,S ? "That's a long name"))</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  val sauce = field(S ? "Like chocalate sauce?", false)</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  override def validations = notTooMuchChocolate _ :: super.validations</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  def notTooMuchChocolate(): Errors = {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    if (sauce &amp;&amp; flavor.toLowerCase.contains("chocolate")) "That's a lot of chocolate"</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    else Nil</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  }</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  def finish() {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    if (sauce) {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">      S.notice(<a href="http://flavor.is" target="_blank">flavor.is</a>+" tastes especially good with chocolate sauce!")</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    }</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">    else S.notice("I like "+<a href="http://flavor.is" target="_blank">flavor.is</a>+" too!")</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  }</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">}</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</blockquote>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>So, you you change the chocolate box and enter a flavor that contains chocolate, you get an error indicating that there's just too much chocolate.</span></div>
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<h2><span style="font-size: large;"><span><strong>Working with Mapper and Record instances</strong></span></span></h2>
+</div>
+<p />
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span>Turns out that LiftScreen works just ducky with Mapper and Record:</span></div>
+<p />
+</div>
+</div>
+</div>
+</div>
+</div>
+<blockquote style="border: medium none; margin: 0pt 0pt 0pt 40px; padding: 0px;">
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">object PersonScreen extends LiftScreen {</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  object person extends ScreenVar(Person.create)</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  override def screenTop =</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  &lt;b&gt;A single screen with some input validation&lt;/b&gt;</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p />
+<div><span style="font-family: Helvetica Neue,Arial,Helvetica,sans-serif; font-size: 12px; color: #222222; line-height: 18px;">
+</span><div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; font-weight: inherit; font-style: inherit; font-size: 12px; font-family: inherit; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;">
+<div style="border-width: 0px; margin: 0px; padding: 0px; vertical-align: baseline;"><span><span style="font-family: courier new, monospace;">  _register(() =&gt; <a href="http://person.is" target="_blank">person.is</a>)</span></span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p /></blockquote>

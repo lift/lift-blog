@@ -1,0 +1,138 @@
+title: Announcing Lift 2.2-M1
+date: 2010/11/03 12:12:00 -0700
+tags: []
+author: Indrajit Raychaudhuri
+alias: /announcing-lift-22-m1
+
+<h1 style="margin-left: 40px;"><span style="font-size: x-small;"><span style="font-weight: normal;"><span style="font-family: arial, sans-serif; font-size: medium; border-collapse: collapse;">
+<div class="ii gt" style="font-size: 13px; margin-top: 5px; margin-right: 15px; margin-bottom: 5px; margin-left: 15px; padding-bottom: 20px;">
+<div>
+<h1 style="margin-left: 40px;"><span style="font-weight: normal; font-size: small;">The&nbsp;<a href="http://liftweb.net/" target="_blank" style="color: #3333cc;">Lift</a>&nbsp;team and the&nbsp;<a href="http://groups.google.com/group/liftweb" target="_blank" style="color: #3333cc;">Lift community</a>&nbsp;are proud to announce the availability of&nbsp;<a href="http://liftweb.net/download.html" target="_blank" style="color: #3333cc;">Lift 2.2-M1</a></span></h1>
+<p style="margin-left: 40px;">Lift is an elegant, expressive web framework that allows any size team build and maintain secure, highly interactive, scalable web applicationsquickly and efficiently.&nbsp; Lift is built on the<a href="http://scala-lang.org/" target="_blank" style="color: #3333cc;">Scala</a>&nbsp;and compiles to JVM byte-code.&nbsp; Lift applications deploy as WAR files on popular application servers and web cotainers including Jetty, Glassfish and Tomcat.&nbsp; Lift applications can be monitored and managed with the same proven infrastructure used to manage and monitor any Java web application.&nbsp; Lift is open source licensed under an Apache 2.0 license.</p>
+<h2 style="margin-left: 40px;">Lift features include:</h2>
+<ul style="margin-left: 40px;">
+<li style="margin-left: 15px;">Community... the Lift community is 2,300 members strong, super-active and always there to help with questions</li>
+<li style="margin-left: 15px;">Best Comet (server-push) support that allows the creation of dynamic application such as&nbsp;<a href="http://www.novell.com/products/pulse/" target="_blank" style="color: #3333cc;">Novell Pulse</a></li>
+<li style="margin-left: 15px;">Super simple Ajax for creating highly interactive web applications without worrying about HTTP plumbing</li>
+<li style="margin-left: 15px;">Secure by default... Lift apps are resistant to the OWASP top 10 vulnerabilities including XSS, XSRF, and parameter tampering</li>
+<li style="margin-left: 15px;">Concise and Maintainable... Lift apps typically contain fewer lines of code than corresponding Rails apps, yet are type safe so that many errors are flagged by the compiler</li>
+<li style="margin-left: 15px;">Scalable... Lift apps scale to millions of users across many servers, yet are highly efficient for single-box implementations</li>
+<li style="margin-left: 15px;">Compatible... Lift apps can take advantage of any Java library as well as the growing collection of Scala libraries</li>
+</ul>
+<h2 style="margin-left: 40px;">Lift 2.2-M1's new features include:</h2>
+<ul style="margin-left: 40px;">
+<li style="margin-left: 15px;"><a href="http://www.assembla.com/wiki/show/liftweb/Designer_Friendly_Templates" target="_blank" style="color: #3333cc;">Designer-friendly templates</a></li>
+<li style="margin-left: 15px;"><a href="http://www.assembla.com/wiki/show/liftweb/Binding_via_CSS_Selectors" target="_blank" style="color: #3333cc;">CSS Selector Transforms</a></li>
+<li style="margin-left: 15px;"><a href="http://www.assembla.com/wiki/show/liftweb/Stateless_Requests" target="_blank" style="color: #3333cc;">Stateless rendering</a>&nbsp;including the HTML pipeline</li>
+<li style="margin-left: 15px;">Separation of CRUDify and ProtoUser from Mapper so they can be used with any backing store</li>
+<li style="margin-left: 15px;"><a href="http://www.assembla.com/wiki/show/liftweb/MVC_%28if_you_really_want_it%29" target="_blank" style="color: #3333cc;">Support for MVC-style development</a></li>
+</ul>
+<h2 style="margin-left: 40px;">Lift-powered sites include:</h2>
+<ul style="margin-left: 40px;">
+<li style="margin-left: 15px;"><a href="http://foursquare.com/" target="_blank" style="color: #3333cc;">Foursquare</a>&nbsp;-- the multi-million user location based service that will soon surpass 1M+ checkins a day on their Lift-powered system</li>
+<li style="margin-left: 15px;"><a href="http://www.novell.com/products/pulse/" target="_blank" style="color: #3333cc;">Novell</a>&nbsp;<a href="http://www.vimeo.com/7443817" target="_blank" style="color: #3333cc;">Pulse</a>&nbsp;-- enterprise collaboration software platform based on Google Wave</li>
+<li style="margin-left: 15px;"><a href="http://innovationgames.com/" target="_blank" style="color: #3333cc;">Innovation Games</a>: The fun way to do serious business -- seriously</li>
+<li style="margin-left: 15px;"><a href="http://www.xmpie.com/" target="_blank" style="color: #3333cc;">Xerox/XMPie</a>&nbsp;-- the leading provider of software for cross-media, variable data one-to-one marketing</li>
+<li style="margin-left: 15px;"><a href="http://snapsort.com/" target="_blank" style="color: #3333cc;">Snapsort</a>&nbsp;-- Compare and decide on cameras</li>
+<li style="margin-left: 15px;"><a href="http://nofouls.com/" target="_blank" style="color: #3333cc;">No Fouls</a>&nbsp;-- Find pickup basketball games</li>
+</ul>
+<h2 style="margin-left: 40px;">Lift 2.2-M1's exhaustive change list:</h2>
+<div>
+<div style="padding-left: 60px;">See the&nbsp;<a href="http://www.assembla.com/spaces/liftweb/milestones/276821" target="_blank" style="color: #3333cc;">Ticket Tracker</a>&nbsp;for the full reference.</div>
+</div>
+<div>
+<p />
+<div style="padding-left: 60px;"><em>New Features:</em></div>
+</div>
+<div>
+<div>
+<ul>
+<li>&nbsp;
+<ul>
+<li style="margin-left: 15px;">Add full BSON support to lift-mongodb &nbsp;Issue: 568.&nbsp;</li>
+<li style="margin-left: 15px;">Support for Sybase ASE using JTDS JDBC driver for Lift 3.0 &nbsp;Issue: 620.&nbsp;</li>
+<li style="margin-left: 15px;">Add binding support to the embed tag &nbsp;Issue: 639.&nbsp;</li>
+<li style="margin-left: 15px;">Add XML matchers to TestResponse &nbsp;Issue: 640.&nbsp;</li>
+<li style="margin-left: 15px;">Add support for prefixed attributes to BindParam subclasses &nbsp;Issue: 647.&nbsp;</li>
+<li style="margin-left: 15px;">Support for multiple validation &nbsp;Issue: 664.&nbsp;</li>
+<li style="margin-left: 15px;">Update CRUDify and ProtoUser to be persistance agnostic &nbsp;Issue: 684.&nbsp;</li>
+<li style="margin-left: 15px;">Implement FuncBoxBindParam &nbsp;Issue: 690.&nbsp;</li>
+<li style="margin-left: 15px;">Review designer friendly and add bind by css selectors &nbsp;Issue: 695.&nbsp;</li>
+<li style="margin-left: 15px;">Add some simple MVC style helpers for Lift &nbsp;Issue: 703.&nbsp;</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div>
+<div style="padding-left: 60px;"><em>Fixed Bugs:</em></div>
+</div>
+<div>
+<div>
+<ul>
+<li>&nbsp;
+<ul>
+<li style="margin-left: 15px;">Save an edited db-record which has a custom primary key -&gt; Trying to open an empty Box &nbsp;Issue: 552.&nbsp;</li>
+<li style="margin-left: 15px;">Browser Detection (for max simultaneous connections) Doesn't Handle Firefox 4 &nbsp;Issue: 646.&nbsp;</li>
+<li style="margin-left: 15px;">lift-mapper should not depend on H2 and Derby &nbsp;Issue: 648.&nbsp;</li>
+<li style="margin-left: 15px;">Chrome 7 barf on comet tags that include lift:when = ... &nbsp;Issue: 698.&nbsp;</li>
+<li style="margin-left: 15px;">Bug at OpenID's rawJUL2List &nbsp;Issue: 556.&nbsp;</li>
+<li style="margin-left: 15px;">Inconsistent rendering of notices in AJAX responses &nbsp;Issue: 589.&nbsp;</li>
+<li style="margin-left: 15px;">Add "body: NodeSeq" Parameter to Shtml.submit() &nbsp;Issue: 613.&nbsp;</li>
+<li style="margin-left: 15px;">All external links in SiteMap treated as same link &nbsp;Issue: 615.&nbsp;</li>
+<li style="margin-left: 15px;">CouchDB : StackOverflow in &nbsp;Issue: 649.&nbsp;</li>
+<li style="margin-left: 15px;">Values can't be extracted from JSON with Map[String, List[String]] &nbsp;Issue: 654.&nbsp;</li>
+<li style="margin-left: 15px;">SHtml.ajaxRadio() &nbsp;Issue: 657.&nbsp;</li>
+<li style="margin-left: 15px;">Change Loc.snippet to use currentValue &nbsp;Issue: 661.&nbsp;</li>
+<li style="margin-left: 15px;">JsonParser.Buffer incorrectly handles input Reader &nbsp;Issue: 671.&nbsp;</li>
+<li style="margin-left: 15px;">XMLApiHelpers has ambiguous implicit conversions from NodeSeq and Seq[Node] &nbsp;Issue: 678.&nbsp;</li>
+<li style="margin-left: 15px;">ImageResizer.getOrientation should handle Exceptions &nbsp;Issue: 682.&nbsp;</li>
+<li style="margin-left: 15px;">n.l.r.f.EmailField.emailPatter n is broken &nbsp;Issue: 691.&nbsp;</li>
+<li style="margin-left: 15px;">Performance degradation in JSON compact rendering &nbsp;Issue: 696.&nbsp;</li>
+<li style="margin-left: 15px;">\uffff is a valid char in JSON string literal &nbsp;Issue: 697.&nbsp;</li>
+<li style="margin-left: 15px;">POM Housekeeping &nbsp;Issue: 447.&nbsp;</li>
+<li style="margin-left: 15px;">Option bind, being able to remove large portion of html if none &nbsp;Issue: 629.&nbsp;</li>
+<li style="margin-left: 15px;">Misleading error message in net.liftweb.util.Props &nbsp;Issue: 645.&nbsp;</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div>
+<div style="padding-left: 60px;"><em>Other Changes:</em></div>
+</div>
+<div>
+<div>
+<ul>
+<li>&nbsp;
+<ul>
+<li style="margin-left: 15px;">OpenID error messages should be customizable &nbsp;Issue: 561.&nbsp;</li>
+<li style="margin-left: 15px;">Update vscaladoc packageLink defs with baseUri for external dependencies &nbsp;Issue: 579.&nbsp;</li>
+<li style="margin-left: 15px;">Update slf4j and logback revisions and make using logging backend more flexible &nbsp;Issue: 516.&nbsp;</li>
+<li style="margin-left: 15px;">Change log4j version in lift 2.1 from 1.2.14 to 1.2.16 &nbsp;Issue: 644.&nbsp;</li>
+<li style="margin-left: 15px;">ImageResizer support for gif, bmp detection and jpeg quality &nbsp;Issue: 662.&nbsp;</li>
+<li style="margin-left: 15px;">Consider ways of making &lt;lift:Menu.item/&gt; work with custom locs &nbsp;Issue: 663.&nbsp;</li>
+<li style="margin-left: 15px;">Features that require session state should warn when container sessions are disabled &nbsp;Issue: 665.&nbsp;</li>
+<li style="margin-left: 15px;">LiftRules.uriNotFound does not support NotFoundAsTemplate when handling 404s for urls served by ResourceServer &nbsp;Issue: 668.&nbsp;</li>
+<li style="margin-left: 15px;">Add a class LocParam to SiteMap &nbsp;Issue: 679.&nbsp;</li>
+<li style="margin-left: 15px;">Make LiftScreen and Wizard stateful snippets &nbsp;Issue: 699.&nbsp;</li>
+<li style="margin-left: 15px;">Enrich archetypes to take CLI parameter logBackend &nbsp;Issue: 700.&nbsp;</li>
+<li style="margin-left: 15px;">Skip the &lt;!DOCTYPE ...&gt; tag at the beginning of an HTML file &nbsp;Issue: 702.&nbsp;</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div>
+<p />
+<div>
+<div style="padding-left: 60px;">Please join the Lift community and help use grow Lift.&nbsp; And a super-big thanks to the 30+ Lift committers who have grown the Lift community and code-base to what it is today... and what it will be in the future!</div>
+</div>
+</div>
+<p />
+<div style="margin-left: 40px;">Thank you, have fun!</div>
+<div style="margin-left: 40px;"><a href="http://liftweb.net/team" target="_blank" style="color: #3333cc;">The Lift Framework Team</a></div>
+<p />
+</div>
+</div>
+</span></span></span></h1>

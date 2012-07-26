@@ -1,0 +1,86 @@
+title: A new Lift Chat App screencast
+date: 2010/11/12 12:10:00 -0800
+tags: []
+author: David Pollak
+alias: /a-new-lift-chat-app-screencast
+
+<p>Enjoy: <a href="http://liftweb.blip.tv/file/4374370/" target="_blank">Screencast video</a><p /></p>
+<div>The HTML Template:</div>
+<blockquote class="webkit-indent-blockquote" style="margin: 0 0 0 40px; border: none; padding: 0px;">
+<div><span style="font-family: courier new,monospace;">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "<a href="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd</a>"&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&lt;html xmlns="<a href="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</a>"&gt;&lt;head&gt;</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;&lt;meta content="text/html; charset=UTF-8" http-equiv="content-type" /&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;&lt;title&gt;Home&lt;/title&gt;</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;&lt;/head&gt;&lt;body class="lift:content_id=main"&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;&lt;div id="main" class="lift:surround?with=default;at=content"&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;h2&gt;Welcome to your project!&lt;/h2&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;This is my chat app, baby&lt;br /&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;ul class="lift:comet?type=Chat"&gt;</span></div>
+<div><span class="Apple-tab-span" style=""><span style="font-family: courier new,monospace;"> </span></span><span style="font-family: courier new,monospace;">&lt;li&gt;Chat Line 1&lt;/li&gt;</span></div>
+<div><span class="Apple-tab-span" style=""><span style="font-family: courier new,monospace;"> </span></span><span style="font-family: courier new,monospace;">&lt;li class="clearable"&gt;Chat Line 2&lt;/li&gt;</span></div>
+<div><span class="Apple-tab-span" style=""><span style="font-family: courier new,monospace;"> </span></span><span style="font-family: courier new,monospace;">&lt;li class="clearable"&gt;Chat line 3&lt;br /&gt;</span></div>
+<div><span class="Apple-tab-span" style=""><span style="font-family: courier new,monospace;"> </span></span><span style="font-family: courier new,monospace;">&lt;/li&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;/ul&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;form action="/" class="lift:form.ajax"&gt;&lt;input id="chat_in" class="lift:ChatIn" name="foo" /&gt;&lt;br /&gt;</span></div>
+<div><span class="Apple-tab-span" style=""><span style="font-family: courier new,monospace;"> </span></span><span style="font-family: courier new,monospace;">&lt;input value="say something" type="submit" /&gt;&lt;/form&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;br /&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp; &nbsp;&lt;p&gt; &lt;span class="lift:helloWorld.howdy"&gt; Welcome to your Lift app at &lt;span id="time"&gt;Time goes here&lt;/span&gt; &lt;/span&gt; &lt;/p&gt;</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;&lt;/div&gt;</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&lt;/body&gt;&lt;/html&gt;</span></div>
+</blockquote>
+<div>The Chat.scala file:</div>
+<blockquote class="webkit-indent-blockquote" style="margin: 0 0 0 40px; border: none; padding: 0px;">
+<div><span style="font-family: courier new,monospace;">package code</span></div>
+<div><span style="font-family: courier new,monospace;">package comet</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">import net.liftweb._</span></div>
+<div><span style="font-family: courier new,monospace;">import http._</span></div>
+<div><span style="font-family: courier new,monospace;">import actor._</span></div>
+<div><span style="font-family: courier new,monospace;">import util._</span></div>
+<div><span style="font-family: courier new,monospace;">import Helpers._</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">object ChatServer extends LiftActor with ListenerManager {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;private var msgs = Vector("Welcome")</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;def createUpdate = msgs</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;override def lowPriority = {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;case s: String =&gt; msgs :+= s; updateListeners()</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;}</span></div>
+<div><span style="font-family: courier new,monospace;">}</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">class Chat extends CometActor with CometListener {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;private var msgs: Vector[String] = Vector()</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;def registerWith = ChatServer</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;override def lowPriority = {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;case v: Vector[String] =&gt; msgs = v; reRender()</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;}</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;def render = "li *" #&gt; msgs &amp; ClearClearable</span></div>
+<div><span style="font-family: courier new,monospace;">}</span></div>
+</blockquote>
+<div>And the ChatIn.scala snippet:</div>
+<blockquote class="webkit-indent-blockquote" style="margin: 0 0 0 40px; border: none; padding: 0px;">
+<div><span style="font-family: courier new,monospace;">package code</span></div>
+<div><span style="font-family: courier new,monospace;">package snippet</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">import net.liftweb._</span></div>
+<div><span style="font-family: courier new,monospace;">import http._</span></div>
+<div><span style="font-family: courier new,monospace;">import js._</span></div>
+<div><span style="font-family: courier new,monospace;">import JsCmds._</span></div>
+<div><span style="font-family: courier new,monospace;">import JE._</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">import comet.ChatServer</span></div>
+<p />
+<div><span style="font-family: courier new,monospace;">object ChatIn {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;def render = SHtml.onSubmit(s =&gt; {</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;ChatServer ! s</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp; &nbsp;SetValById("chat_in", "")</span></div>
+<div><span style="font-family: courier new,monospace;">&nbsp;&nbsp;})</span></div>
+<div><span style="font-family: courier new,monospace;">}</span></div>
+</blockquote>
