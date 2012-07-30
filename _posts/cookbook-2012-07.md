@@ -3,9 +3,6 @@ date: 2012/07/30
 tags: []
 author: Richard Dallaway
 
-Cookbook updates for July 2012
-------------------------------
-
 Six more recipes added to the [Lift Cookbook](http://cookbook.liftweb.net/) this month:
 
 * [Sequencing CSS selector operations](http://cookbook.liftweb.net/Sequencing+CSS+selector+operations.html).
