@@ -1,6 +1,6 @@
 title: Cookbook updates for July
 date: 2012/07/30
-tags: []
+tags: [x-dpp]
 author: Richard Dallaway
 
 Six more recipes added to the [Lift Cookbook](http://cookbook.liftweb.net/) this month:
